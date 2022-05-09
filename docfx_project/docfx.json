@@ -4,7 +4,7 @@
       "src": [
         {
           "files": [
-            "src/AspNetServices/submodules/ColorCodePortable/MarkdownServer.ColorCodePortable/**"
+            "src/AspNetServices/submodules/ColorCodePortable/MDS.ColorCodePortable/MDS.ColorCodePortable.csproj"
           ]
         }
       ],

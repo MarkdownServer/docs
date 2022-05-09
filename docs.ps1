@@ -1,49 +1,53 @@
 param(
-    [switch]$Serve=$false,
+    [switch]$Serve = $false,
     [string]$DocfxProject = 'docfx_project/docfx.json'
 )
 
-if(-not (Test-Path $DocfxProject)) { throw "Project at [$DocfxProject] is not valid."}
+if (-not (Test-Path $DocfxProject)) {
+    throw "Project at [$DocfxProject] is not valid."
+}
 Push-Location
-try{
-$DocfxProject = (Resolve-Path $DocfxProject).Path.Replace("\", "/");
+try {
+    $DocfxProject = (Resolve-Path $DocfxProject).Path.Replace('\', '/');
 
-$location=Get-Item $DocfxProject
+    $location = Get-Item $DocfxProject
 
-Set-Location $location.Directory
+    Set-Location $location.Directory
 
-[string[]]$arguments=@()
+    [string[]]$arguments = @()
 
-$command = 'build'
+    $command = 'build'
 
-if($Serve){
-    $command="serve"
-}
+    if ($Serve) {
+        $command = 'serve'
+    }
 
-switch($command){
+    switch ($command) {
     ('build') {
-        $arguments = @( $command, $DocfxProject) 
+            Get-ChildItem 'M*.yml', 'Xunit*.yml', 'System*.yml' -rec | Remove-Item -rec -for
+            Get-ChildItem obj, bin, logs, _site -rec | Remove-Item -rec -for
 
-        $arguments += @(
-            '-l'
-            , './logs/docfx.log'
-            , '--loglevel'
-            , 'Verbose'
-            , '--debug'
-            , '--debugOutput'
-            , './logs'
-        );
-    }
+            $arguments = @( $command, $DocfxProject) 
+
+            $arguments += @(
+                '--force'
+                , '-l'
+                , './logs/docfx.log'
+                , '--loglevel'
+                , 'Verbose'
+                , '--debug'
+                , '--debugOutput'
+                , './logs'
+            );
+        }
     ('serve') {
-        $arguments = @( $command, '_site') 
+            $arguments = @( $command, '_site') 
+        }
     }
-}
 
-Get-ChildItem obj,bin,logs -rec | Remove-Item -rec -for
+    Write-Host $arguments
 
-Write-Host $arguments
-
-& docfx $arguments
+    & docfx $arguments
 
 }
 finally {
