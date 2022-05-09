@@ -1,0 +1,18 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csharp",
+        "fudge.auto-using",
+        "adrianwilczynski.namespace",
+        "quadrixo.csharp-workspace",
+        "adrianwilczynski.underscore-name",
+        "dannymcgee.csharp-grammar-extended",
+        "poohcom1.csharp-prettier-docs",
+        "pflannery.vscode-versionlens",
+        "tintoy.msbuild-project-tools",
+        "doggy8088.netcore-editorconfiggenerator",
+        "adrianwilczynski.add-reference",
+        "jmazouri.sharppad",
+        "1devestacion1.dotnet-build-by-context",
+        "pierre3.csharp-to-plantuml"
+    ]
+}

@@ -1,9 +1,16 @@
 param(
     [switch]$Serve=$false,
-    [string]$DocfxProject = './docfx_project/docfx.json'
+    [string]$DocfxProject = 'docfx_project/docfx.json'
 )
 
 if(-not (Test-Path $DocfxProject)) { throw "Project at [$DocfxProject] is not valid."}
+Push-Location
+try{
+$DocfxProject = (Resolve-Path $DocfxProject).Path.Replace("\", "/");
+
+$location=Get-Item $DocfxProject
+
+Set-Location $location.Directory
 
 [string[]]$arguments=@()
 
@@ -13,6 +20,32 @@ if($Serve){
     $command="serve"
 }
 
-$argumentString=Join-String $arguments-Separator " "
+switch($command){
+    ('build') {
+        $arguments = @( $command, $DocfxProject) 
 
-& docfx $command $DocfxProject $argumentString
+        $arguments += @(
+            '-l'
+            , './logs/docfx.log'
+            , '--loglevel'
+            , 'Verbose'
+            , '--debug'
+            , '--debugOutput'
+            , './logs'
+        );
+    }
+    ('serve') {
+        $arguments = @( $command, '_site') 
+    }
+}
+
+Get-ChildItem obj,bin,logs -rec | Remove-Item -rec -for
+
+Write-Host $arguments
+
+& docfx $arguments
+
+}
+finally {
+    Pop-Location
+}
